@@ -161,14 +161,15 @@ auth_radius_request_create(auth_radius_proxy_t* proxy,const char* username,
 	}
 
 	//for example,we use local host as radius server
+	memset(&rad_server, 0, sizeof(struct sockaddr_in));
 	rad_server.sin_family = AF_INET;
 	rad_server.sin_addr.s_addr = inet_addr("127.0.0.1");
 	rad_server.sin_port = htons(RADIUS_AUTH_PORT);
-	rad_server.sin_len = sizeof(rad_server);
 
 	bzero(&rp->dst_ipaddr,sizeof(rp->dst_ipaddr));
-    fr_sockaddr2ipaddr((const struct sockaddr_storage*)&rad_server,
-           	rad_server.sin_len,&rp->dst_ipaddr,&port);
+	fr_sockaddr2ipaddr((const struct sockaddr_storage*)&rad_server,
+		sizeof(struct sockaddr_in),
+		&rp->dst_ipaddr,&port);
     rp->dst_port = port & 0xFFFF;
 	rp->sockfd = -1; 
 	rp->src_ipaddr.af = rp->dst_ipaddr.af;

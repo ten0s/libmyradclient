@@ -4,10 +4,11 @@ CC=gcc
 CFLAGS=-m64 -g -O2 -Wall
 
 ifeq ($(uname_S),Linux)
-		CFLAGS+=-DHAVE_THREAD_TLS
+		CFLAGS+=-DHAVE_THREAD_TLS -DHAVE_INET_PTON -DHAVE_CLOSEFROM
 endif
 #CFLAGS+=-DWITH_DICTIONARY_WARNINGS
 CFLAGS+=-DHAVE_STRUCT_SOCKADDR_IN6
+CFLAGS+=-fPIC
 
 all:libmyradclient.a 
 test:libmyradclient.a example.o
