@@ -169,10 +169,12 @@ rad_request_packet_create_noeapmd5(const char* username,size_t len1,
 			pairadd(&vps,vp);
 		}
 	} else if(auth_type == PAP) {
+		// ATTRIBUTE User-Password 2 string encrypt=1
 		vp = paircreate(PW_USER_PASSWORD,PW_TYPE_STRING);
 		if(vp) {
 			strncpy(vp->vp_strvalue,password,len2);
 			vp->length = len2;
+			vp->flags.encrypt = FLAG_ENCRYPT_USER_PASSWORD;
 			pairadd(&vps,vp);
 		}
 	} else if(auth_type == MSCHAP) {
