@@ -174,7 +174,7 @@ rad_request_packet_create_noeapmd5(const char* username,size_t len1,
 		if(vp) {
 			strncpy(vp->vp_strvalue,password,len2);
 			vp->length = len2;
-			vp->flags.encrypt = FLAG_ENCRYPT_USER_PASSWORD;
+			vp->flags.encrypt = FLAG_ENCRYPT_USER_PASSWORD; // (1)
 			pairadd(&vps,vp);
 		}
 	} else if(auth_type == MSCHAP) {
@@ -194,12 +194,12 @@ rad_request_packet_create_noeapmd5(const char* username,size_t len1,
 	}
 	if(vp == NULL)
 		goto failed;
-	
+
 	vp = paircreate(PW_SERVICE_TYPE,PW_TYPE_INTEGER);
 	if(vp == NULL)
 		goto failed;
 	pairadd(&vps,vp);
-	vp->lvalue = 17;/*Authentication*/
+	vp->lvalue = PW_AUTHENTICATE_ONLY; // (8)
 
 	vp = paircreate(PW_MESSAGE_AUTHENTICATOR,PW_TYPE_OCTETS);
 	if(vp == NULL)
