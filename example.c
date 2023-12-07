@@ -255,8 +255,6 @@ process_radius_reply(auth_radius_proxy_t* proxy,
         if (r->auth_type == EAPMD5) {
             rad_unmap_eap_types(r->reply);
         }
-
-        fprintf(stderr, "receive response: ");
         debug_reply_packet(r->reply);
     }
 }
@@ -428,7 +426,7 @@ int main(int argc, char* argv[]) {
                     r->reply = NULL;
                 } else {
                     auth_radius_request_delete(proxy, r);
-                    auth_radius_request_destroy(proxy,r );
+                    auth_radius_request_destroy(proxy,r);
                     break;
                 }
             }
