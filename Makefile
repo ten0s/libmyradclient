@@ -10,7 +10,7 @@ endif
 CFLAGS+=-DHAVE_STRUCT_SOCKADDR_IN6
 CFLAGS+=-fPIC
 
-all:libmyradclient.a 
+all:libmyradclient.a
 test:libmyradclient.a example.o
 
 OBJS=radclient.o dict.o md5.o misc.o \
@@ -80,5 +80,3 @@ example:example.o libmyradclient.a
 .PHONY:clean
 clean:
 	rm -rf *.o libmyradclient.a example
-
-	
