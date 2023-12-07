@@ -307,7 +307,7 @@ int main(int argc, char* argv[]) {
     auth_radius_proxy_t* proxy = NULL;
     auth_radius_request_t* r = NULL;
     fd_set fds;
-    struct timeval tv = {5, 0};//5 seconds
+    struct timeval tv = {5, 0}; //5 seconds
     int nfds = 0;
 
     char* server_host = DEFAULT_RADIUS_HOST;
@@ -324,7 +324,7 @@ int main(int argc, char* argv[]) {
     }
 
     int opt;
-    while ((opt = getopt(argc, argv, "H:P:S:u:p:d:a:h")) != -1) {
+    while ((opt = getopt(argc, argv, "H:P:S:u:p:a:d:qh")) != -1) {
         switch (opt) {
         case 'H':
             server_host = optarg;
@@ -341,11 +341,11 @@ int main(int argc, char* argv[]) {
         case 'p':
             password = optarg;
             break;
-        case 'd':
-            dict_path = optarg;
-            break;
         case 'a':
             auth_type = parse_auth_type(argv[0], optarg);
+            break;
+        case 'd':
+            dict_path = optarg;
             break;
         case 'h':
             usage(argv[0]);
