@@ -268,7 +268,7 @@ usage(const char* prog) {
             "     -u <username> username\n"
             "     -p <password> password\n"
             "    [-a <auth>]    auth type (PAP|CHAP|MSCHAP|MSCHAPV2|EAPMD5), default: PAP\n"
-            "    [-d <path>]    dictionary path\n"
+            "    [-d <path>]    dictionary path (for human-readable output)\n"
             "    [-h]           help\n",
             prog);
 }
@@ -369,7 +369,7 @@ int main(int argc, char* argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    if (dict_init(dict_path, "dictionary") == -1) {
+    if (dict_path && dict_init(dict_path, "dictionary") == -1) {
         fprintf(stderr, "failed to initial radius dictionary: %s",
                 fr_strerror());
         exit(EXIT_FAILURE);
