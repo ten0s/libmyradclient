@@ -10,6 +10,8 @@
 #define DEFAULT_SHARED_SECRET "testing123"
 #define DEFAULT_AUTH_TYPE PAP
 
+#define AUTH_TYPE_UNKNOWN -1
+
 typedef struct auth_radius_proxy_s auth_radius_proxy_t;
 typedef struct auth_radius_request_s auth_radius_request_t;
 
@@ -278,8 +280,8 @@ missing(const char* prog, const char* name) {
     fprintf(stderr, "%s: missing option -- '%s'\n", prog, name);
 }
 
-static RADIUS_AUTH_TYPE
-parse_auth_type(const char* prog, const char* str) {
+static int
+parse_auth_type(const char* str) {
     static struct { const char* key; RADIUS_AUTH_TYPE val; } kvs[] = {
         { "PAP"     , PAP      },
         { "CHAP"    , CHAP     },
@@ -293,9 +295,7 @@ parse_auth_type(const char* prog, const char* str) {
             return kvs[i].val;
         }
     }
-    fprintf(stderr, "%s: invalid auth type -- '%s'\n", prog, str);
-    usage(prog);
-    exit(EXIT_FAILURE);
+    return AUTH_TYPE_UNKNOWN;
 }
 
 /*
@@ -318,8 +318,9 @@ int main(int argc, char* argv[]) {
     RADIUS_AUTH_TYPE auth_type = DEFAULT_AUTH_TYPE;
     char* dict_path = NULL;
 
+    const char* prog = argv[0];
     if (argc == 1) {
-        usage(argv[0]);
+        usage(prog);
         exit(EXIT_FAILURE);
     }
 
@@ -342,30 +343,36 @@ int main(int argc, char* argv[]) {
             password = optarg;
             break;
         case 'a':
-            auth_type = parse_auth_type(argv[0], optarg);
+            auth_type = parse_auth_type(optarg);
             break;
         case 'd':
             dict_path = optarg;
             break;
         case 'h':
-            usage(argv[0]);
+            usage(prog);
             exit(EXIT_SUCCESS);
             break;
         default:
-            usage(argv[0]);
+            usage(prog);
             exit(EXIT_FAILURE);
         }
     }
 
     if (!username) {
-        missing(argv[0], "username");
-        usage(argv[0]);
+        missing(prog, "username");
+        usage(prog);
         exit(EXIT_FAILURE);
     }
 
     if (!password) {
-        missing(argv[0], "password");
-        usage(argv[0]);
+        missing(prog, "password");
+        usage(prog);
+        exit(EXIT_FAILURE);
+    }
+
+    if (auth_type == AUTH_TYPE_UNKNOWN) {
+        fprintf(stderr, "%s: invalid auth type\n", prog);
+        usage(prog);
         exit(EXIT_FAILURE);
     }
 
