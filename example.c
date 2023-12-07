@@ -372,7 +372,7 @@ int main(int argc, char* argv[]) {
     }
 
     if (dict_init(dict_path, "dictionary") == -1) {
-        fprintf(stderr, "failed to initial radius dictionry: %s",
+        fprintf(stderr, "failed to initial radius dictionary: %s",
                 fr_strerror());
         exit(EXIT_FAILURE);
     }
