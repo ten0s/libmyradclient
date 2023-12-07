@@ -19,6 +19,3 @@ The library just support 5 authentication methods as the following:
         make example
     Note:
         The example depends on libmyradclient.a,so you must compile radius client library first.
-    
-
-
