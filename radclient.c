@@ -152,9 +152,9 @@ rad_request_packet_create_noeapmd5(const char* username,size_t len1,
 	vp = paircreate(PW_USER_NAME,PW_TYPE_STRING);
 	if(vp == NULL)
 		goto failed;
-	pairadd(&vps,vp);
 	vp->length = len1;
 	strncpy(vp->vp_strvalue,username,len1);
+	pairadd(&vps,vp);
 
 	vp = NULL;
 	if(auth_type == CHAP) {
@@ -198,18 +198,17 @@ rad_request_packet_create_noeapmd5(const char* username,size_t len1,
 	vp = paircreate(PW_SERVICE_TYPE,PW_TYPE_INTEGER);
 	if(vp == NULL)
 		goto failed;
-	pairadd(&vps,vp);
 	vp->lvalue = PW_AUTHENTICATE_ONLY; // (8)
+	pairadd(&vps,vp);
 
 	vp = paircreate(PW_MESSAGE_AUTHENTICATOR,PW_TYPE_OCTETS);
 	if(vp == NULL)
 		goto failed;
-	pairadd(&vps,vp);
 	/*RFC-2869:
 	 * The length of Message-Authenticator is 16 octets
 	 */
 	vp->length = 16;
-
+	pairadd(&vps,vp);
 
 	request->vps = vps;
 
