@@ -205,19 +205,16 @@ respond_eap_md5(RADIUS_PACKET *req,
 	return 1;
 }
 
-int 
+int
 rad_set_eap_id(RADIUS_PACKET* rp)
 {
 	VALUE_PAIR* vp = NULL;
-	char eap_id[8] = {0};
-
-	
-    bzero(eap_id,sizeof(eap_id));
-    snprintf(eap_id,sizeof(eap_id),"%d",rp->id);
-    vp = pairmake("EAP-Id",eap_id,T_OP_SET);
+    //vp = pairmake("EAP-Id",eap_id,T_OP_SET);
+	vp = paircreate(ATTRIBUTE_EAP_ID,PW_TYPE_INTEGER);
     if(vp == NULL) {
 		return -1;
     }
+	vp->lvalue = rp->id;
     pairadd(&rp->vps,vp);
 	return 0;
 }
@@ -254,29 +251,38 @@ rad_create_eap_response(const char* username,size_t len)
     pairadd(&vps,vp);
 
     vp = NULL;
-    vp = pairmake("Service-Type","17",T_OP_SET);
+    //vp = pairmake("Service-Type","8",T_OP_SET);
+    vp = paircreate(PW_SERVICE_TYPE,PW_TYPE_INTEGER);
     if(vp == NULL) {
 		goto failed;
     }
-    pairadd(&vps,vp);
-    
-    vp = NULL;
-    vp = pairmake("Message-Authenticator","0",T_OP_SET);
-    if(vp == NULL) {
-		goto failed;
-    }
+	vp->lvalue = PW_AUTHENTICATE_ONLY; // (8)
     pairadd(&vps,vp);
 
     vp = NULL;
-    vp = pairmake("EAP-Code","Response",T_OP_SET);
+    //vp = pairmake("Message-Authenticator","0",T_OP_SET);
+	vp = paircreate(PW_MESSAGE_AUTHENTICATOR,PW_TYPE_OCTETS);
     if(vp == NULL) {
 		goto failed;
     }
+	/*RFC-2869:
+	 * The length of Message-Authenticator is 16 octets
+	 */
+	vp->length = 16;
+    pairadd(&vps,vp);
+
+    vp = NULL;
+    //vp = pairmake("EAP-Code","Response",T_OP_SET);
+	vp = paircreate(ATTRIBUTE_EAP_CODE,PW_TYPE_INTEGER);
+    if(vp == NULL) {
+		goto failed;
+    }
+    vp->lvalue = PW_EAP_RESPONSE; // (2)
     pairadd(&vps,vp);
 
     vp = NULL;
 	vp = paircreate(ATTRIBUTE_EAP_BASE + PW_EAP_IDENTITY,PW_TYPE_OCTETS);
-    //vp = pairmake("EAP-Type-Identity",username,T_OP_SET);    
+    //vp = pairmake("EAP-Type-Identity",username,T_OP_SET);
     if(vp == NULL) {
 		goto failed;
     }
