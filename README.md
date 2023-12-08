@@ -31,7 +31,7 @@ you can link it into your radius program.
 
 ### Compile example:
 
-There is a example in the source file `example.c`, to build it run:
+There is an example in the source file `example.c`, to build it run:
 
 ```
 $ make example
